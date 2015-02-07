@@ -126,6 +126,7 @@ class Proxy {
 
 		$newName = $name . '_' . date("YmdHis");
 		$relations = $relations ? Config::get('larasearch::paths.' . get_class($model)) : [];
+		$mapping = Utils::findKey($model, '__es_mapping', $mapping);
 
 		Index::clean($name);
 
