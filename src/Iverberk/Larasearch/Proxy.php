@@ -126,12 +126,18 @@ class Proxy {
 
 		$newName = $name . '_' . date("YmdHis");
 		$relations = $relations ? Config::get('larasearch::paths.' . get_class($model)) : [];
-		$mapping = [
-			'mappings' => [
-				$this->getType() => Utils::findKey($model, '__es_mapping', $mapping)
-			]
-		];
-
+		$explicitRelations = isset($model::$__es_relations) ? $model::$__es_relations : [];  
+		$relations = $relations ? array_merge($relations, $explicitRelations) : $explicitRelations;
+		
+		$explicitMapping = isset($model::$__es_mapping) ? $model::$__es_mapping : [];
+		if ($explicitMapping) {
+			$mapping = [
+				'mappings' => [
+					$this->getType() => $explicitMapping 
+				]
+			];
+		}
+		
 		Index::clean($name);
 
 		$index = App::make('iverberk.larasearch.index', array('name' => $newName, 'proxy' => $this));
