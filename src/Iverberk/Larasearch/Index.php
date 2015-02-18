@@ -169,7 +169,7 @@ class Index {
 	 */
 	public function create($options = [])
 	{
-		$body = empty($options) ? $this->getDefaultIndexParams() : $options;
+		$body = array_merge_recursive($this->getDefaultIndexParams(), $options);
 
 		self::getClient()->indices()->create(['index' => $this->getName(), 'body' => $body]);
 	}
