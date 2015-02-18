@@ -58,12 +58,21 @@ class Response {
 	{
 		if(count($this->getHits()) > 0)
 		{
-			$ids = array_map(function ($hit)
-				{
-					return $hit['_id'];
-				}, $this->getHits());
-
-			return call_user_func_array(array($this->model, 'whereIn'), array('id', $ids))->get();
+			$ids = []; $queryids = [];
+			foreach ($this->getHits() as &$hit) {
+				$ids[$hit['_id']] = $hit;
+			}
+			foreach ($ids as $id => &$hit) {
+				$queryids[] = $id;
+			}
+			
+			$records = call_user_func_array(array($this->model, 'whereIn'), array('id', $queryids))->get();
+			
+			foreach ($records as &$record) {
+				$record->hit = $ids[$record->id];
+			}
+			
+			return $records;
 		}
 		else
 		{
