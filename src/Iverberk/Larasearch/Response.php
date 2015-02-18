@@ -56,10 +56,13 @@ class Response {
 	 */
 	public function getRecords()
 	{
-		if(count($this->getHits()) > 0)
+		$hits = $this->getHits();
+		if(count($hits) > 0)
 		{
 			$ids = []; $queryids = [];
-			foreach ($this->getHits() as &$hit) {
+			for ($i = 0, $length = count($hits); $i < $length; $i++) {
+				$hit =& $hits[$i];
+				$hit['_i'] = $i;
 				$ids[$hit['_id']] = $hit;
 			}
 			foreach ($ids as $id => &$hit) {
@@ -71,6 +74,10 @@ class Response {
 			foreach ($records as &$record) {
 				$record->hit = $ids[$record->id];
 			}
+			
+			$records->sortBy(function($record) {
+				return $record->hit['_i'];
+			});
 			
 			return $records;
 		}
