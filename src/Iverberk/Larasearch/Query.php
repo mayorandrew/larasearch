@@ -227,7 +227,7 @@ class Query {
 
 		if (count($payload_key) == 1)
 		{
-			$this->payload = array_merge($this->payload, $payloads[key($payload_key)]);
+			$this->payload = array_merge($this->payload ? $this->payload : [], $payloads[key($payload_key)]);
 		}
 		elseif (count($payload_key) == 0)
 		{
@@ -314,10 +314,10 @@ class Query {
 	 *
 	 * @return Response
 	 */
-	public function execute()
+	public function execute($count = false)
 	{
 		$this->getFields();
-		$this->getPagination();
+		//$this->getPagination();
 		$this->getHighlight();
 		$this->getSuggest();
 		$this->getAggregations();
@@ -330,7 +330,11 @@ class Query {
 			'body' => $this->payload
 		];
 
-		return new Response($this->proxy->getModel(), $this->proxy->getClient()->search($params));
+		if ($count) {
+			return new Response($this->proxy->getModel(), $this->proxy->getClient()->count($params));
+		} else {
+			return new Response($this->proxy->getModel(), $this->proxy->getClient()->search($params));
+		}
 	}
 
 }

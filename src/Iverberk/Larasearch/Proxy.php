@@ -76,7 +76,8 @@ class Proxy {
 	 */
 	public function search($term, $options = [])
 	{
-		return App::make('iverberk.larasearch.query', ['proxy' => $this, 'term' => $term, 'options' => $options])->execute();
+		$count = isset($options['count']) && $options['count'];
+		return App::make('iverberk.larasearch.query', ['proxy' => $this, 'term' => $term, 'options' => $options])->execute($count);
 	}
 
 	/**

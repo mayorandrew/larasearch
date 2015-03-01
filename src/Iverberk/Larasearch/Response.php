@@ -136,6 +136,14 @@ class Response {
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function getCount()
+	{
+		return $this->response['count'];
+	}
+
+	/**
 	 * @param array $fields
 	 * @return mixed
 	 */
