@@ -214,7 +214,7 @@ class Proxy {
 				'id' => $model->getEsId(),
 				'index' => $this->getIndex()->getName(),
 				'type' => $this->getType(),
-				'body' => $model->transform(true)
+				'body' => $model->transform(Config::get('larasearch::paths.' . get_class($model)))
 			]
 		);
 	}
